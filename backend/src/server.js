@@ -10,9 +10,18 @@ const { startConsumer } = require("./kafka/consumer");
 (async () => {
     try {
 
-        await connectProducer();
+        if (process.env.ENABLE_KAFKA === "true") {
 
-        await startConsumer();
+            await connectProducer();
+            await startConsumer();
+
+            console.log("✅ Kafka Enabled");
+
+        } else {
+
+            console.log("⚠️ Kafka Disabled");
+
+        }
 
         app.listen(PORT, () => {
             console.log(`🚀 Server running on port ${PORT}`);
