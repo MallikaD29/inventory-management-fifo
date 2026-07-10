@@ -43,15 +43,16 @@ const createSale = async (data) => {
         },
       });
     }
-
-    await publishEvent(INVENTORY_EVENTS, {
-      type: "SALE_CREATED",
-      saleId: sale.id,
-      productId: sale.productId,
-      quantity: sale.quantity,
-      totalCost: sale.totalCost,
-      createdAt: sale.createdAt,
-    });
+    if (process.env.ENABLE_KAFKA === "true") {
+      await publishEvent(INVENTORY_EVENTS, {
+        type: "SALE_CREATED",
+        saleId: sale.id,
+        productId: sale.productId,
+        quantity: sale.quantity,
+        totalCost: sale.totalCost,
+        createdAt: sale.createdAt,
+      });
+    }
 
     return sale;
   });
